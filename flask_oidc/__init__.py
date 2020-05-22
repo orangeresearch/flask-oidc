@@ -513,6 +513,7 @@ class OpenIDConnect(object):
             @wraps(view_func)
             def decorated(*args, **kwargs):
                 pre, tkn, post = self.get_access_token().split('.')
+                tkn += "=" * ((4 - len(tkn) % 4) % 4)   # ensure padding
                 access_token = json.loads(b64decode(tkn))
                 if role in access_token['resource_access'][client]['roles']:
                     return view_func(*args, **kwargs)
